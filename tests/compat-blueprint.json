@@ -1,0 +1,76 @@
+{
+ "landingPage": "/wp-admin/tools.php?page=smart-404s",
+ "login": true,
+ "steps": [
+  {
+   "step": "setSiteOptions",
+   "options": {
+    "permalink_structure": "/%postname%/",
+    "blogname": "Northwind Journal",
+    "blogdescription": ""
+   }
+  },
+  {
+   "step": "activatePlugin",
+   "pluginPath": "smart-404-redirect/smart-404-redirect.php"
+  },
+  {
+   "step": "installTheme",
+   "themeData": {
+    "resource": "wordpress.org/themes",
+    "slug": "twentytwentyone"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "installPlugin",
+   "pluginData": {
+    "resource": "wordpress.org/plugins",
+    "slug": "redirection"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "installPlugin",
+   "pluginData": {
+    "resource": "wordpress.org/plugins",
+    "slug": "seo-by-rank-math"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "installPlugin",
+   "pluginData": {
+    "resource": "wordpress.org/plugins",
+    "slug": "wordpress-seo"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "installPlugin",
+   "pluginData": {
+    "resource": "wordpress.org/plugins",
+    "slug": "woocommerce"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "runPHP",
+   "code": "<?php require '/wordpress/wp-load.php'; require_once ABSPATH.'wp-admin/includes/taxonomy.php'; $gear=wp_create_category('Trail Gear'); $guides=wp_create_category('Guides'); foreach([['How to fix 404 errors','how-to-fix-404-errors',$guides],['Choosing hiking boots','choosing-hiking-boots',$gear],['Best rain jackets for spring','best-rain-jackets-for-spring',$gear],['Packing list for a weekend hike','packing-list-weekend-hike',$guides],['Winter camping basics','winter-camping-basics',$guides],['Best tents of 2024','best-tents-of-2024',$gear],['Best tents of 2025','best-tents-of-2025',$gear],['Old sleeping bag review','old-sleeping-bag-review',$gear],['Uncategorised note','uncategorised-note',1],['Trail shoes for men','trail-shoes-men',$gear],['Trail shoes for a man','trail-shoes-man',$gear]] as $p){wp_insert_post(['post_title'=>$p[0],'post_name'=>$p[1],'post_status'=>'publish','post_category'=>[$p[2]],'post_content'=>'Sample content about '.$p[0]]);} $parent=wp_insert_post(['post_title'=>'Destinations','post_name'=>'destinations','post_type'=>'page','post_status'=>'publish']); wp_insert_post(['post_title'=>'Lake District','post_name'=>'lake-district','post_type'=>'page','post_parent'=>$parent,'post_status'=>'publish']); wp_insert_post(['post_title'=>'Contact us','post_name'=>'contact-us','post_type'=>'page','post_status'=>'publish']); flush_rewrite_rules(); echo 'seeded';"
+  },
+  {
+   "step": "runPHP",
+   "code": "<?php require '/wordpress/wp-load.php'; if(class_exists('WC_Product_Simple')){ $c=wp_insert_term('Rain Gear','product_cat'); $p=new WC_Product_Simple(); $p->set_name('Blue rain jacket'); $p->set_slug('blue-rain-jacket'); $p->set_status('publish'); $p->set_regular_price('10'); $p->set_category_ids([$c['term_id']]); $p->save(); $q=new WC_Product_Simple(); $q->set_name('Red rain jacket'); $q->set_slug('red-rain-jacket'); $q->set_status('publish'); $q->set_regular_price('10'); $q->set_category_ids([$c['term_id']]); $q->save(); update_option('lgs404_test_cat',$c['term_id']); update_option('lgs404_test_product',$q->get_id()); } flush_rewrite_rules(); echo 'ok';"
+  }
+ ]
+}

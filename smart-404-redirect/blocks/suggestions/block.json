@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "smart-404-redirect/suggestions",
+	"title": "404 Suggestions",
+	"category": "widgets",
+	"icon": "lightbulb",
+	"description": "Shows pages related to the broken URL. For 404 templates in themes where the automatic placement does not suit.",
+	"keywords": [ "404", "suggestions", "related" ],
+	"textdomain": "smart-404-redirect",
+	"supports": {
+		"html": false,
+		"multiple": false
+	},
+	"editorScript": "file:./index.js"
+}
