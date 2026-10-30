@@ -12,7 +12,7 @@
   },
   {
    "step": "activatePlugin",
-   "pluginPath": "smart-404-redirect/smart-404-redirect.php"
+   "pluginPath": "smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php"
   },
   {
    "step": "installTheme",

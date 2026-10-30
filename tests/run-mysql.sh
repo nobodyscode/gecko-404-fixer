@@ -33,7 +33,7 @@ if ( preg_match( '#^/wp-admin/#', $p ) && is_file( $_SERVER['DOCUMENT_ROOT'] . $
 $_SERVER['SCRIPT_NAME'] = '/index.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/index.php';
 PHP
-rm -rf "$W/site/wp-content/plugins/smart-404-redirect"; cp -R "$ROOT/smart-404-redirect" "$W/site/wp-content/plugins/"
+rm -rf "$W/site/wp-content/plugins/smart-404s-redirect-by-linkgecko"; cp -R "$ROOT/smart-404s-redirect-by-linkgecko" "$W/site/wp-content/plugins/"
 mkdir -p "$W/site/wp-content/mu-plugins"; cp "$ROOT/tests/e2e-helper.php" "$W/site/wp-content/mu-plugins/"
 [ -n "$RED" ] && cp -R "$RED" "$W/site/wp-content/plugins/redirection"
 python3 - "$ROOT/tests/e2e-blueprint.json" "$W/seed.php" <<'PY'
@@ -53,7 +53,7 @@ cat > "$W/activate.php" <<PHP
 <?php
 \$_SERVER['HTTP_HOST']='127.0.0.1:$PORT';
 require '$W/site/wp-load.php'; require_once ABSPATH.'wp-admin/includes/plugin.php';
-var_dump(activate_plugin('smart-404-redirect/smart-404-redirect.php'));
+var_dump(activate_plugin('smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php'));
 if ('$RED') { var_dump(activate_plugin('redirection/redirection.php')); }
 echo get_option('lgs404_db_version');
 global \$wpdb; print_r(\$wpdb->get_col("SHOW TABLES LIKE '%lgs404%'"));

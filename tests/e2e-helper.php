@@ -104,8 +104,8 @@ add_action(
 				break;
 			case 'uninstall':
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
-				deactivate_plugins( 'smart-404-redirect/smart-404-redirect.php' );
-				uninstall_plugin( 'smart-404-redirect/smart-404-redirect.php' );
+				deactivate_plugins( 'smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php' );
+				uninstall_plugin( 'smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php' );
 				$out = array(
 					'tables'  => $wpdb->get_col( "SHOW TABLES LIKE '%lgs404%'" ),
 					'options' => $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '%lgs404%'" ),

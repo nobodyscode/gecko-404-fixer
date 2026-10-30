@@ -116,10 +116,10 @@ const check = ( name, ok, detail ) => {
 	// The block is available to the editor.
 	await go( '/wp-admin/site-editor.php' ).catch( () => {} );
 	const registered = await page.evaluate( async ( u ) => {
-		const r = await window.wp.apiFetch( { path: '/wp/v2/block-types/smart-404-redirect/suggestions' } ).catch( () => null );
+		const r = await window.wp.apiFetch( { path: '/wp/v2/block-types/smart-404s-redirect-by-linkgecko/suggestions' } ).catch( () => null );
 		return r && r.name;
 	}, base ).catch( () => null );
-	check( 'block is registered', 'smart-404-redirect/suggestions' === registered, registered );
+	check( 'block is registered', 'smart-404s-redirect-by-linkgecko/suggestions' === registered, registered );
 
 	check( 'no JavaScript errors from the plugin', ! errors.some( ( e ) => e.includes( 'lgs404' ) || e.includes( 'admin.js' ) ), errors.join( ' | ' ) );
 

@@ -29,10 +29,10 @@ class Log_Table extends \WP_List_Table {
 
 	public function get_columns() {
 		return array(
-			'path'      => __( 'URL', 'smart-404-redirect' ),
-			'hits'      => __( 'Hits', 'smart-404-redirect' ),
-			'last_seen' => __( 'Last seen', 'smart-404-redirect' ),
-			'result'    => __( 'Result', 'smart-404-redirect' ),
+			'path'      => __( 'URL', 'smart-404s-redirect-by-linkgecko' ),
+			'hits'      => __( 'Hits', 'smart-404s-redirect-by-linkgecko' ),
+			'last_seen' => __( 'Last seen', 'smart-404s-redirect-by-linkgecko' ),
+			'result'    => __( 'Result', 'smart-404s-redirect-by-linkgecko' ),
 		);
 	}
 
@@ -76,10 +76,10 @@ class Log_Table extends \WP_List_Table {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter.
 		$current = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : '';
 		$views   = array(
-			''      => __( 'All', 'smart-404-redirect' ),
-			'fixed' => __( 'Fixed', 'smart-404-redirect' ),
-			'open'  => __( 'Still 404', 'smart-404-redirect' ),
-			'gone'  => __( 'Gone', 'smart-404-redirect' ),
+			''      => __( 'All', 'smart-404s-redirect-by-linkgecko' ),
+			'fixed' => __( 'Fixed', 'smart-404s-redirect-by-linkgecko' ),
+			'open'  => __( 'Still 404', 'smart-404s-redirect-by-linkgecko' ),
+			'gone'  => __( 'Gone', 'smart-404s-redirect-by-linkgecko' ),
 		);
 		$links   = array();
 
@@ -96,7 +96,7 @@ class Log_Table extends \WP_List_Table {
 	}
 
 	public function no_items() {
-		esc_html_e( 'No 404 errors logged yet. Smart 404s only logs real visits, so this fills up as people and search engines reach broken URLs.', 'smart-404-redirect' );
+		esc_html_e( 'No 404 errors logged yet. Smart 404s only logs real visits, so this fills up as people and search engines reach broken URLs.', 'smart-404s-redirect-by-linkgecko' );
 	}
 
 	/**
@@ -129,9 +129,9 @@ class Log_Table extends \WP_List_Table {
 			esc_attr( $path ),
 			wp_nonce_field( 'lgs404_rule', '_wpnonce', true, false ),
 			(int) $item['id'],
-			esc_html__( 'Redirect to', 'smart-404-redirect' ),
-			esc_attr__( 'Start typing a title, or paste a URL on this site', 'smart-404-redirect' ),
-			esc_html__( 'Save redirect', 'smart-404-redirect' )
+			esc_html__( 'Redirect to', 'smart-404s-redirect-by-linkgecko' ),
+			esc_attr__( 'Start typing a title, or paste a URL on this site', 'smart-404s-redirect-by-linkgecko' ),
+			esc_html__( 'Save redirect', 'smart-404s-redirect-by-linkgecko' )
 		);
 
 		return $output;
@@ -150,7 +150,7 @@ class Log_Table extends \WP_List_Table {
 		$actions = array(
 			'lgs404_redirect' => sprintf(
 				'<a href="#" class="lgs404-open-redirect">%s</a>',
-				esc_html__( 'Redirect to…', 'smart-404-redirect' )
+				esc_html__( 'Redirect to…', 'smart-404s-redirect-by-linkgecko' )
 			),
 		);
 
@@ -158,7 +158,7 @@ class Log_Table extends \WP_List_Table {
 			$actions['lgs404_gone'] = sprintf(
 				'<a href="%1$s">%2$s</a>',
 				esc_url( self::action_url( 'gone', (string) $item['path'] ) ),
-				esc_html__( 'Mark as gone (410)', 'smart-404-redirect' )
+				esc_html__( 'Mark as gone (410)', 'smart-404s-redirect-by-linkgecko' )
 			);
 		}
 
@@ -168,7 +168,7 @@ class Log_Table extends \WP_List_Table {
 			$actions['lgs404_undo'] = sprintf(
 				'<a href="%1$s">%2$s</a>',
 				esc_url( self::action_url( 'undo', (string) $item['path'] ) ),
-				esc_html__( 'Undo', 'smart-404-redirect' )
+				esc_html__( 'Undo', 'smart-404s-redirect-by-linkgecko' )
 			);
 		}
 
@@ -203,7 +203,7 @@ class Log_Table extends \WP_List_Table {
 		return esc_html(
 			sprintf(
 				/* translators: %s: how long ago, such as "2 hours". */
-				__( '%s ago', 'smart-404-redirect' ),
+				__( '%s ago', 'smart-404s-redirect-by-linkgecko' ),
 				human_time_diff( (int) strtotime( $item['last_seen'] . ' UTC' ) )
 			)
 		);

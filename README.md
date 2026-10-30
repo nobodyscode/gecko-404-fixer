@@ -10,7 +10,7 @@ Download the latest build from [Releases](../../releases).
 
 | Path | What it is |
 |---|---|
-| `smart-404-redirect/` | The plugin. This folder is what ships. |
+| `smart-404s-redirect-by-linkgecko/` | The plugin. This folder is what ships. |
 | `wporg-assets/` | Icon, banner and screenshots for the SVN `assets` folder. Screenshots use sample data. |
 | `tests/` | End-to-end tests against real WordPress. |
 | `bin/` | Build and asset scripts. |
@@ -37,13 +37,13 @@ tests/run-mysql.sh /tmp/lgs404-stack path/to/redirection        # MariaDB, with 
 NODE_PATH=<puppeteer-core> node tests/admin-flow.js <site url>  # the admin screen, with real nonces
 ```
 
-Before any release, also run the real [Plugin Check](https://wordpress.org/plugins/plugin-check/) on a WordPress site, with `wp plugin check smart-404-redirect --include-experimental`. It crashes inside Playground, and its readme, header and block checks are not covered by running its code rulesets alone.
+Before any release, also run the real [Plugin Check](https://wordpress.org/plugins/plugin-check/) on a WordPress site, with `wp plugin check smart-404s-redirect-by-linkgecko --include-experimental`. It crashes inside Playground, and its readme, header and block checks are not covered by running its code rulesets alone.
 
 Playground uses SQLite and a CLI SAPI, so `run-mysql.sh` is the run that proves the SQL. Redirection also turns itself off under a CLI SAPI, so only that run exercises its rules.
 
 ## Publishing on wordpress.org
 
 1. `bin/build.sh`
-2. Upload `dist/smart-404-redirect-1.0.0-submission.zip` at <https://wordpress.org/plugins/developers/add/>. Its short name locks the `smart-404-redirect` slug. Check the slug in the form before submitting.
-3. Once approved, commit `smart-404-redirect/*` to SVN `trunk`, copy it with `svn cp trunk tags/1.0.0`, and put `wporg-assets/*` in the top-level `assets` folder.
+2. Upload `dist/smart-404s-redirect-by-linkgecko-1.0.0-submission.zip` at <https://wordpress.org/plugins/developers/add/>. Its short name locks the slug. Check the slug in the form before submitting.
+3. Once approved, commit `smart-404s-redirect-by-linkgecko/*` to SVN `trunk`, copy it with `svn cp trunk tags/1.0.0`, and put `wporg-assets/*` in the top-level `assets` folder.
 4. The SVN username is `"him anshu"`, with the space.

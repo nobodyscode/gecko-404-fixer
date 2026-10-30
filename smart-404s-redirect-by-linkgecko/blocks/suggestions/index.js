@@ -2,12 +2,12 @@
 ( function ( blocks, element, blockEditor, i18n ) {
 	'use strict';
 
-	blocks.registerBlockType( 'smart-404-redirect/suggestions', {
+	blocks.registerBlockType( 'smart-404s-redirect-by-linkgecko/suggestions', {
 		edit: function () {
 			return element.createElement(
 				'p',
 				blockEditor.useBlockProps(),
-				i18n.__( 'Smart 404s shows related pages here on the 404 page.', 'smart-404-redirect' )
+				i18n.__( 'Smart 404s shows related pages here on the 404 page.', 'smart-404s-redirect-by-linkgecko' )
 			);
 		},
 		save: function () {

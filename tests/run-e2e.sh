@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 PHPV="${1:-8.5}"; WPV="${2:-latest}"; PORT="${3:-9400}"; BP="${4:-tests/e2e-blueprint.json}"
 LOG="$(mktemp)"
 npx -y @wp-playground/cli@latest server \
-  --mount="$PWD/smart-404-redirect:/wordpress/wp-content/plugins/smart-404-redirect" \
+  --mount="$PWD/smart-404s-redirect-by-linkgecko:/wordpress/wp-content/plugins/smart-404s-redirect-by-linkgecko" \
   --mount="$PWD/tests/e2e-helper.php:/wordpress/wp-content/mu-plugins/e2e-helper.php" \
   --blueprint="$BP" --php="$PHPV" --wp="$WPV" --port="$PORT" --login >"$LOG" 2>&1 &
 PID=$!

@@ -1,13 +1,13 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "smart-404-redirect/suggestions",
+	"name": "smart-404s-redirect-by-linkgecko/suggestions",
 	"title": "404 Suggestions",
 	"category": "widgets",
 	"icon": "lightbulb",
 	"description": "Shows pages related to the broken URL. For 404 templates in themes where the automatic placement does not suit.",
 	"keywords": [ "404", "suggestions", "related" ],
-	"textdomain": "smart-404-redirect",
+	"textdomain": "smart-404s-redirect-by-linkgecko",
 	"supports": {
 		"html": false,
 		"multiple": false

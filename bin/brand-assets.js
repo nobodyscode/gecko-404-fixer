@@ -32,7 +32,7 @@ background-image:radial-gradient(#ffffff2e ${ 1.1 * k }px,transparent ${ 1.3 * k
 ( async () => {
 	fs.mkdirSync( out, { recursive: true } );
 	fs.writeFileSync( path.join( out, 'icon.svg' ), logo );
-	fs.writeFileSync( path.join( __dirname, '../smart-404-redirect/assets/logo.svg' ), logo );
+	fs.writeFileSync( path.join( __dirname, '../smart-404s-redirect-by-linkgecko/assets/logo.svg' ), logo );
 
 	const browser = await puppeteer.launch( { executablePath: CHROME, headless: 'new' } );
 	const page = await browser.newPage();

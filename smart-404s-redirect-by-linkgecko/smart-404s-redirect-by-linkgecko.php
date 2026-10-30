@@ -10,7 +10,7 @@
  * Author URI:        https://linkgecko.com
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       smart-404-redirect
+ * Text Domain:       smart-404s-redirect-by-linkgecko
  *
  * @package LinkGecko\Smart404
  */

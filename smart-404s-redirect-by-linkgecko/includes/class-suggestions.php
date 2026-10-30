@@ -107,8 +107,8 @@ class Suggestions {
 
 		return sprintf(
 			'<nav class="lgs404-suggestions" aria-label="%1$s"><p class="lgs404-suggestions__title">%2$s</p><ul>%3$s</ul></nav>',
-			esc_attr__( 'Suggested pages', 'smart-404-redirect' ),
-			esc_html__( 'Maybe you were looking for', 'smart-404-redirect' ),
+			esc_attr__( 'Suggested pages', 'smart-404s-redirect-by-linkgecko' ),
+			esc_html__( 'Maybe you were looking for', 'smart-404s-redirect-by-linkgecko' ),
 			$items
 		);
 	}

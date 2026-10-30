@@ -48,8 +48,8 @@ class Admin {
 
 	public static function menu(): void {
 		add_management_page(
-			__( 'Smart 404s', 'smart-404-redirect' ),
-			__( 'Smart 404s', 'smart-404-redirect' ),
+			__( 'Smart 404s', 'smart-404s-redirect-by-linkgecko' ),
+			__( 'Smart 404s', 'smart-404s-redirect-by-linkgecko' ),
 			'manage_options',
 			self::SLUG,
 			array( __CLASS__, 'render' )
@@ -63,7 +63,7 @@ class Admin {
 	public static function action_links( $links ): array {
 		array_unshift(
 			$links,
-			sprintf( '<a href="%1$s">%2$s</a>', esc_url( self::url() ), esc_html__( 'Open', 'smart-404-redirect' ) )
+			sprintf( '<a href="%1$s">%2$s</a>', esc_url( self::url() ), esc_html__( 'Open', 'smart-404s-redirect-by-linkgecko' ) )
 		);
 
 		return $links;
@@ -98,7 +98,7 @@ class Admin {
 	 */
 	public static function handle_rule(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to do that.', 'smart-404-redirect' ), 403 );
+			wp_die( esc_html__( 'You do not have permission to do that.', 'smart-404s-redirect-by-linkgecko' ), 403 );
 		}
 
 		check_admin_referer( 'lgs404_rule' );
@@ -157,7 +157,7 @@ class Admin {
 
 	public static function dismiss_review(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to do that.', 'smart-404-redirect' ), 403 );
+			wp_die( esc_html__( 'You do not have permission to do that.', 'smart-404s-redirect-by-linkgecko' ), 403 );
 		}
 
 		check_admin_referer( 'lgs404_dismiss_review' );
@@ -176,11 +176,11 @@ class Admin {
 		$result = (string) $item['result'];
 
 		if ( Store::RESULT_GONE === $result ) {
-			return self::badge( __( 'Gone (410)', 'smart-404-redirect' ), 'muted' );
+			return self::badge( __( 'Gone (410)', 'smart-404s-redirect-by-linkgecko' ), 'muted' );
 		}
 
 		if ( Store::RESULT_FALLBACK === $result ) {
-			return self::badge( __( 'Sent to fallback', 'smart-404-redirect' ), 'muted' );
+			return self::badge( __( 'Sent to fallback', 'smart-404s-redirect-by-linkgecko' ), 'muted' );
 		}
 
 		if ( Store::RESULT_FIXED === $result ) {
@@ -191,22 +191,22 @@ class Admin {
 		}
 
 		if ( Store::KIND_KEEP === ( $item['kind'] ?? '' ) ) {
-			return self::badge( __( '404, as you chose', 'smart-404-redirect' ), 'muted' );
+			return self::badge( __( '404, as you chose', 'smart-404s-redirect-by-linkgecko' ), 'muted' );
 		}
 
-		return self::badge( __( 'Still 404', 'smart-404-redirect' ), 'open' );
+		return self::badge( __( 'Still 404', 'smart-404s-redirect-by-linkgecko' ), 'open' );
 	}
 
 	private static function origin_label( string $origin ): string {
 		$labels = array(
-			'renamed' => __( 'Renamed', 'smart-404-redirect' ),
-			'deleted' => __( 'Deleted', 'smart-404-redirect' ),
-			'near'    => __( 'Typo fixed', 'smart-404-redirect' ),
-			'core'    => __( 'Matched', 'smart-404-redirect' ),
-			'manual'  => __( 'Your redirect', 'smart-404-redirect' ),
+			'renamed' => __( 'Renamed', 'smart-404s-redirect-by-linkgecko' ),
+			'deleted' => __( 'Deleted', 'smart-404s-redirect-by-linkgecko' ),
+			'near'    => __( 'Typo fixed', 'smart-404s-redirect-by-linkgecko' ),
+			'core'    => __( 'Matched', 'smart-404s-redirect-by-linkgecko' ),
+			'manual'  => __( 'Your redirect', 'smart-404s-redirect-by-linkgecko' ),
 		);
 
-		return $labels[ $origin ] ?? __( 'Fixed', 'smart-404-redirect' );
+		return $labels[ $origin ] ?? __( 'Fixed', 'smart-404s-redirect-by-linkgecko' );
 	}
 
 	private static function badge( string $label, string $tone ): string {
@@ -230,10 +230,10 @@ class Admin {
 
 	private static function notice_text( string $key ): string {
 		$notices = array(
-			'saved'      => __( 'Saved.', 'smart-404-redirect' ),
-			'bad_path'   => __( 'That URL could not be read, so nothing changed.', 'smart-404-redirect' ),
-			'bad_target' => __( 'Redirects can only point to a page on this site. Nothing changed.', 'smart-404-redirect' ),
-			'loop'       => __( 'That would send visitors in a circle, so it was not saved.', 'smart-404-redirect' ),
+			'saved'      => __( 'Saved.', 'smart-404s-redirect-by-linkgecko' ),
+			'bad_path'   => __( 'That URL could not be read, so nothing changed.', 'smart-404s-redirect-by-linkgecko' ),
+			'bad_target' => __( 'Redirects can only point to a page on this site. Nothing changed.', 'smart-404s-redirect-by-linkgecko' ),
+			'loop'       => __( 'That would send visitors in a circle, so it was not saved.', 'smart-404s-redirect-by-linkgecko' ),
 		);
 
 		return $notices[ $key ] ?? '';
