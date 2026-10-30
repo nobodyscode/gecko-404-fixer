@@ -2,10 +2,10 @@
 /**
  * The 404 error log, using the same table WordPress uses everywhere else.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,8 +20,8 @@ class Log_Table extends \WP_List_Table {
 	public function __construct() {
 		parent::__construct(
 			array(
-				'singular' => 'lgs404-url',
-				'plural'   => 'lgs404-urls',
+				'singular' => 'lgf404-url',
+				'plural'   => 'lgf404-urls',
 				'ajax'     => false,
 			)
 		);
@@ -29,10 +29,10 @@ class Log_Table extends \WP_List_Table {
 
 	public function get_columns() {
 		return array(
-			'path'      => __( 'URL', 'smart-404s-redirect-by-linkgecko' ),
-			'hits'      => __( 'Hits', 'smart-404s-redirect-by-linkgecko' ),
-			'last_seen' => __( 'Last seen', 'smart-404s-redirect-by-linkgecko' ),
-			'result'    => __( 'Result', 'smart-404s-redirect-by-linkgecko' ),
+			'path'      => __( 'URL', 'gecko-404-fixer' ),
+			'hits'      => __( 'Hits', 'gecko-404-fixer' ),
+			'last_seen' => __( 'Last seen', 'gecko-404-fixer' ),
+			'result'    => __( 'Result', 'gecko-404-fixer' ),
 		);
 	}
 
@@ -76,10 +76,10 @@ class Log_Table extends \WP_List_Table {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only filter.
 		$current = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : '';
 		$views   = array(
-			''      => __( 'All', 'smart-404s-redirect-by-linkgecko' ),
-			'fixed' => __( 'Fixed', 'smart-404s-redirect-by-linkgecko' ),
-			'open'  => __( 'Still 404', 'smart-404s-redirect-by-linkgecko' ),
-			'gone'  => __( 'Gone', 'smart-404s-redirect-by-linkgecko' ),
+			''      => __( 'All', 'gecko-404-fixer' ),
+			'fixed' => __( 'Fixed', 'gecko-404-fixer' ),
+			'open'  => __( 'Still 404', 'gecko-404-fixer' ),
+			'gone'  => __( 'Gone', 'gecko-404-fixer' ),
 		);
 		$links   = array();
 
@@ -96,7 +96,7 @@ class Log_Table extends \WP_List_Table {
 	}
 
 	public function no_items() {
-		esc_html_e( 'No 404 errors logged yet. Smart 404s only logs real visits, so this fills up as people and search engines reach broken URLs.', 'smart-404s-redirect-by-linkgecko' );
+		esc_html_e( 'No 404 errors logged yet. Gecko 404 Fixer only logs real visits, so this fills up as people and search engines reach broken URLs.', 'gecko-404-fixer' );
 	}
 
 	/**
@@ -113,25 +113,25 @@ class Log_Table extends \WP_List_Table {
 	protected function column_path( $item ) {
 		$path = (string) $item['path'];
 
-		$output = sprintf( '<code class="lgs404-path">%s</code>', esc_html( $path ) );
+		$output = sprintf( '<code class="lgf404-path">%s</code>', esc_html( $path ) );
 
 		$output .= sprintf(
-			'<form class="lgs404-redirect-form" method="post" action="%1$s" hidden>
-				<input type="hidden" name="action" value="lgs404_rule" />
+			'<form class="lgf404-redirect-form" method="post" action="%1$s" hidden>
+				<input type="hidden" name="action" value="lgf404_rule" />
 				<input type="hidden" name="op" value="redirect" />
 				<input type="hidden" name="path" value="%2$s" />
 				%3$s
-				<label class="screen-reader-text" for="lgs404-target-%4$d">%5$s</label>
-				<input id="lgs404-target-%4$d" class="lgs404-target regular-text" type="text" name="target" list="lgs404-pages" placeholder="%6$s" autocomplete="off" required />
-				<button type="submit" class="lgs404-btn lgs404-btn--small">%7$s</button>
+				<label class="screen-reader-text" for="lgf404-target-%4$d">%5$s</label>
+				<input id="lgf404-target-%4$d" class="lgf404-target regular-text" type="text" name="target" list="lgf404-pages" placeholder="%6$s" autocomplete="off" required />
+				<button type="submit" class="lgf404-btn lgf404-btn--small">%7$s</button>
 			</form>',
 			esc_url( admin_url( 'admin-post.php' ) ),
 			esc_attr( $path ),
-			wp_nonce_field( 'lgs404_rule', '_wpnonce', true, false ),
+			wp_nonce_field( 'lgf404_rule', '_wpnonce', true, false ),
 			(int) $item['id'],
-			esc_html__( 'Redirect to', 'smart-404s-redirect-by-linkgecko' ),
-			esc_attr__( 'Start typing a title, or paste a URL on this site', 'smart-404s-redirect-by-linkgecko' ),
-			esc_html__( 'Save redirect', 'smart-404s-redirect-by-linkgecko' )
+			esc_html__( 'Redirect to', 'gecko-404-fixer' ),
+			esc_attr__( 'Start typing a title, or paste a URL on this site', 'gecko-404-fixer' ),
+			esc_html__( 'Save redirect', 'gecko-404-fixer' )
 		);
 
 		return $output;
@@ -148,27 +148,27 @@ class Log_Table extends \WP_List_Table {
 		}
 
 		$actions = array(
-			'lgs404_redirect' => sprintf(
-				'<a href="#" class="lgs404-open-redirect">%s</a>',
-				esc_html__( 'Redirect to…', 'smart-404s-redirect-by-linkgecko' )
+			'lgf404_redirect' => sprintf(
+				'<a href="#" class="lgf404-open-redirect">%s</a>',
+				esc_html__( 'Redirect to…', 'gecko-404-fixer' )
 			),
 		);
 
 		if ( Store::KIND_GONE !== ( $item['kind'] ?? '' ) ) {
-			$actions['lgs404_gone'] = sprintf(
+			$actions['lgf404_gone'] = sprintf(
 				'<a href="%1$s">%2$s</a>',
 				esc_url( self::action_url( 'gone', (string) $item['path'] ) ),
-				esc_html__( 'Mark as gone (410)', 'smart-404s-redirect-by-linkgecko' )
+				esc_html__( 'Mark as gone (410)', 'gecko-404-fixer' )
 			);
 		}
 
 		$undoable = Store::KIND_GONE === ( $item['kind'] ?? '' ) || Store::RESULT_FIXED === $item['result'];
 
 		if ( $undoable ) {
-			$actions['lgs404_undo'] = sprintf(
+			$actions['lgf404_undo'] = sprintf(
 				'<a href="%1$s">%2$s</a>',
 				esc_url( self::action_url( 'undo', (string) $item['path'] ) ),
-				esc_html__( 'Undo', 'smart-404s-redirect-by-linkgecko' )
+				esc_html__( 'Undo', 'gecko-404-fixer' )
 			);
 		}
 
@@ -179,13 +179,13 @@ class Log_Table extends \WP_List_Table {
 		return wp_nonce_url(
 			add_query_arg(
 				array(
-					'action' => 'lgs404_rule',
+					'action' => 'lgf404_rule',
 					'op'     => $op,
 					'path'   => rawurlencode( $path ),
 				),
 				admin_url( 'admin-post.php' )
 			),
-			'lgs404_rule'
+			'lgf404_rule'
 		);
 	}
 
@@ -203,7 +203,7 @@ class Log_Table extends \WP_List_Table {
 		return esc_html(
 			sprintf(
 				/* translators: %s: how long ago, such as "2 hours". */
-				__( '%s ago', 'smart-404s-redirect-by-linkgecko' ),
+				__( '%s ago', 'gecko-404-fixer' ),
 				human_time_diff( (int) strtotime( $item['last_seen'] . ' UTC' ) )
 			)
 		);

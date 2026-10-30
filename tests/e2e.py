@@ -77,22 +77,22 @@ for probe in ["/.env", "/wp-config.php", "/backup.sql", "/site.zip", "/wp-admin/
 # Suggestions on a real 404 page, within the theme.
 s, _, _, body = req("/hiking-boots-guide-xyz/")
 check("real 404 status", s == 404, s)
-check("suggestions on the 404 page", "lgs404-suggestions" in body, body[:200])
-check("suggestions printed once", body.count('class="lgs404-suggestions"') == 1, body.count('class="lgs404-suggestions"'))
+check("suggestions on the 404 page", "lgf404-suggestions" in body, body[:200])
+check("suggestions printed once", body.count('class="lgf404-suggestions"') == 1, body.count('class="lgf404-suggestions"'))
 check("suggestion relates to the URL", "Choosing hiking boots" in body)
 check("still inside the theme", "wp-block-template-part" in body or "site-footer" in body or "<footer" in body)
 check("no front-end credit link", "linkgecko.com" not in body.lower())
 
 s, _, _, body = req("/how-to-fix-404-errors/")
-check("no suggestions on normal pages", "lgs404-suggestions" not in body)
-check("no plugin CSS on normal pages", "lgs404-front" not in body)
+check("no suggestions on normal pages", "lgf404-suggestions" not in body)
+check("no plugin CSS on normal pages", "lgf404-front" not in body)
 
 # Referrer capture.
 req("/choosing-hiking-bots/", {"Referer": "https://www.example-blog.com/some/private/page?x=1"})
 req("/never-existed-page-abc/", {"Referer": "https://other-site.org/post"})
 
 def helper(op, **params):
-    s, _, _, body = req("/?" + urllib.parse.urlencode(dict(lgs404_e2e=op, **params)))
+    s, _, _, body = req("/?" + urllib.parse.urlencode(dict(lgf404_e2e=op, **params)))
     try:
         return json.loads(body)
     except ValueError:
@@ -177,7 +177,7 @@ helper("settings", key="auto_fix", value="1")
 # Suggestions off.
 helper("settings", key="suggestions", value="0")
 s, _, _, body = req("/one-more-missing-page-qq/")
-check("suggestions can be switched off", s == 404 and "lgs404-suggestions" not in body)
+check("suggestions can be switched off", s == 404 and "lgf404-suggestions" not in body)
 helper("settings", key="suggestions", value="1")
 
 # A POST never triggers a redirect.
@@ -199,7 +199,7 @@ if "redirection/redirection.php" in helper("plugins"):
         rule = helper("redirection", **{"from": "/how-to-fix-404-errrs", "to": "/contact-us/"})
         check("Redirection rule created", rule.get("ok"), rule)
         s_, loc_, r_, _ = req("/how-to-fix-404-errrs")
-        check("Redirection's own rule beats ours", s_ == 301 and "/contact-us/" in loc_ and r_.getheader("X-Redirect-By") != "Smart 404s", f"{s_} {loc_} {r_.getheader('X-Redirect-By')}")
+        check("Redirection's own rule beats ours", s_ == 301 and "/contact-us/" in loc_ and r_.getheader("X-Redirect-By") != "Gecko 404 Fixer", f"{s_} {loc_} {r_.getheader('X-Redirect-By')}")
     expect("we still handle what they do not", "/how-to-fix-404-errorz/", 301, "/how-to-fix-404-errors/")
 
 if "woocommerce/woocommerce.php" in helper("plugins"):
@@ -217,7 +217,7 @@ if "woocommerce/woocommerce.php" in helper("plugins"):
 # Last, because it removes the plugin.
 gone = helper("uninstall")
 check("uninstall removes both tables", gone.get("tables") == [], gone)
-check("uninstall removes every option and transient", [o for o in gone.get("options", []) if "lgs404_test" not in o] == [], gone)
+check("uninstall removes every option and transient", [o for o in gone.get("options", []) if "lgf404_test" not in o] == [], gone)
 check("uninstall removes the schedule", not gone.get("cron"), gone)
 
 print(f"\n{checks - fails} of {checks} checks passed")

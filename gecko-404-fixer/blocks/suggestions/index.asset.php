@@ -2,7 +2,7 @@
 /**
  * Dependencies for the block's editor script.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -2,16 +2,16 @@
 /**
  * The plugin's few settings, kept in one option.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
 class Settings {
 
-	const OPTION = 'lgs404_settings';
+	const OPTION = 'lgf404_settings';
 
 	public static function defaults(): array {
 		return array(

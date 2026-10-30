@@ -7,10 +7,10 @@
  *
  * phpcs:disable WordPress.DB.DirectDatabaseQuery
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -30,13 +30,13 @@ class Store {
 	public static function rules_table(): string {
 		global $wpdb;
 
-		return $wpdb->prefix . 'lgs404_redirects';
+		return $wpdb->prefix . 'lgf404_redirects';
 	}
 
 	public static function log_table(): string {
 		global $wpdb;
 
-		return $wpdb->prefix . 'lgs404_log';
+		return $wpdb->prefix . 'lgf404_log';
 	}
 
 	public static function hash( string $path ): string {
@@ -243,7 +243,7 @@ class Store {
 	 * number of queries, and normal sites never reach the limit.
 	 */
 	public static function take_budget( string $name, int $per_minute ): bool {
-		$key  = 'lgs404_budget_' . $name;
+		$key  = 'lgf404_budget_' . $name;
 		$used = (int) get_transient( $key );
 
 		if ( $used >= $per_minute ) {

@@ -2,10 +2,10 @@
 /**
  * Wires the plugin into WordPress.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,7 +16,7 @@ class Plugin {
 		Tracker::register();
 		Suggestions::register();
 
-		add_action( 'lgs404_daily', array( Install::class, 'trim' ) );
+		add_action( 'lgf404_daily', array( Install::class, 'trim' ) );
 
 		if ( is_admin() ) {
 			Admin::register();

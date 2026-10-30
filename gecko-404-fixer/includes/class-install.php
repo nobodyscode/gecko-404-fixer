@@ -2,10 +2,10 @@
 /**
  * Tables, scheduling and housekeeping.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,7 +20,7 @@ class Install {
 	}
 
 	public static function deactivate(): void {
-		wp_clear_scheduled_hook( 'lgs404_daily' );
+		wp_clear_scheduled_hook( 'lgf404_daily' );
 	}
 
 	/**
@@ -28,7 +28,7 @@ class Install {
 	 * a new site in a network never fires it for that site, so this repairs both.
 	 */
 	public static function maybe_upgrade(): void {
-		if ( get_option( 'lgs404_db_version' ) !== self::DB_VERSION ) {
+		if ( get_option( 'lgf404_db_version' ) !== self::DB_VERSION ) {
 			self::install();
 		}
 	}
@@ -81,10 +81,10 @@ class Install {
 			) {$charset};"
 		);
 
-		update_option( 'lgs404_db_version', self::DB_VERSION );
+		update_option( 'lgf404_db_version', self::DB_VERSION );
 
-		if ( ! wp_next_scheduled( 'lgs404_daily' ) ) {
-			wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', 'lgs404_daily' );
+		if ( ! wp_next_scheduled( 'lgf404_daily' ) ) {
+			wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', 'lgf404_daily' );
 		}
 	}
 

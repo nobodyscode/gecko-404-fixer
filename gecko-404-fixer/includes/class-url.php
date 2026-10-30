@@ -2,10 +2,10 @@
 /**
  * Turns requests and form input into the normalised paths everything else uses.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 

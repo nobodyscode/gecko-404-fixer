@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 ROOT="$PWD"; W="$1"; RED="${2:-}"; PORT=9420; DBPORT=33160; PHP=/opt/homebrew/bin/php
 mkdir -p "$W/db" "$W/site"
 mariadb-install-db --no-defaults --datadir="$W/db" --auth-root-authentication-method=normal --skip-test-db >/dev/null 2>&1
-mariadbd --no-defaults --datadir="$W/db" --port=$DBPORT --bind-address=127.0.0.1 --socket="/tmp/lgs404-$$.sock" --pid-file="$W/db.pid" --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO >"$W/db.log" 2>&1 &
+mariadbd --no-defaults --datadir="$W/db" --port=$DBPORT --bind-address=127.0.0.1 --socket="/tmp/lgf404-$$.sock" --pid-file="$W/db.pid" --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO >"$W/db.log" 2>&1 &
 DBPID=$!
 cleanup() { kill "${WEBPID:-}" "$DBPID" 2>/dev/null; }
 trap cleanup EXIT
@@ -33,7 +33,7 @@ if ( preg_match( '#^/wp-admin/#', $p ) && is_file( $_SERVER['DOCUMENT_ROOT'] . $
 $_SERVER['SCRIPT_NAME'] = '/index.php';
 require $_SERVER['DOCUMENT_ROOT'] . '/index.php';
 PHP
-rm -rf "$W/site/wp-content/plugins/smart-404s-redirect-by-linkgecko"; cp -R "$ROOT/smart-404s-redirect-by-linkgecko" "$W/site/wp-content/plugins/"
+rm -rf "$W/site/wp-content/plugins/gecko-404-fixer"; cp -R "$ROOT/gecko-404-fixer" "$W/site/wp-content/plugins/"
 mkdir -p "$W/site/wp-content/mu-plugins"; cp "$ROOT/tests/e2e-helper.php" "$W/site/wp-content/mu-plugins/"
 [ -n "$RED" ] && cp -R "$RED" "$W/site/wp-content/plugins/redirection"
 python3 - "$ROOT/tests/e2e-blueprint.json" "$W/seed.php" <<'PY'
@@ -53,11 +53,11 @@ cat > "$W/activate.php" <<PHP
 <?php
 \$_SERVER['HTTP_HOST']='127.0.0.1:$PORT';
 require '$W/site/wp-load.php'; require_once ABSPATH.'wp-admin/includes/plugin.php';
-var_dump(activate_plugin('smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php'));
+var_dump(activate_plugin('gecko-404-fixer/gecko-404-fixer.php'));
 if ('$RED') { var_dump(activate_plugin('redirection/redirection.php')); }
-echo get_option('lgs404_db_version');
-global \$wpdb; print_r(\$wpdb->get_col("SHOW TABLES LIKE '%lgs404%'"));
-print_r(\$wpdb->get_results("SHOW CREATE TABLE {\$wpdb->prefix}lgs404_log", ARRAY_A));
+echo get_option('lgf404_db_version');
+global \$wpdb; print_r(\$wpdb->get_col("SHOW TABLES LIKE '%lgf404%'"));
+print_r(\$wpdb->get_results("SHOW CREATE TABLE {\$wpdb->prefix}lgf404_log", ARRAY_A));
 PHP
 $PHP "$W/install.php" 2>&1 | tail -3
 $PHP "$W/activate.php" 2>&1 | tail -32 | cut -c1-160
@@ -67,7 +67,7 @@ WEBPID=$!
 sleep 2
 python3 tests/e2e.py "http://127.0.0.1:$PORT"
 RC=$?
-echo "--- debug.log, plugin lines:"; grep -iE "smart-404|lgs404|WordPress database error" "$W/site/wp-content/debug.log" 2>/dev/null | sort -u | cut -c1-300 | head -20
+echo "--- debug.log, plugin lines:"; grep -iE "gecko-404-fixer|lgf404|WordPress database error" "$W/site/wp-content/debug.log" 2>/dev/null | sort -u | cut -c1-300 | head -20
 echo "--- debug.log lines total: $(wc -l < "$W/site/wp-content/debug.log" 2>/dev/null)"
 [ -n "${KEEP:-}" ] && { echo "kept running; press ctrl-c"; wait; }
 exit $RC

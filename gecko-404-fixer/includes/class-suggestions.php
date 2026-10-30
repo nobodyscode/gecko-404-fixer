@@ -3,10 +3,10 @@
  * The helpful part of a real 404: posts that look like what the visitor wanted,
  * placed inside the site's own theme.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ class Suggestions {
 	private static bool $printed = false;
 
 	public static function register(): void {
-		add_shortcode( 'smart_404s_suggestions', array( __CLASS__, 'shortcode' ) );
+		add_shortcode( 'gecko_404_fixer_suggestions', array( __CLASS__, 'shortcode' ) );
 		add_action( 'init', array( __CLASS__, 'register_block' ) );
 
 		if ( is_admin() ) {
@@ -34,14 +34,14 @@ class Suggestions {
 
 	public static function register_block(): void {
 		register_block_type(
-			LGS404_DIR . 'blocks/suggestions',
+			LGF404_DIR . 'blocks/suggestions',
 			array( 'render_callback' => array( __CLASS__, 'shortcode' ) )
 		);
 	}
 
 	public static function enqueue(): void {
 		if ( self::is_active() ) {
-			wp_enqueue_style( 'lgs404-front', LGS404_URL . 'assets/front.css', array(), LGS404_VERSION );
+			wp_enqueue_style( 'lgf404-front', LGF404_URL . 'assets/front.css', array(), LGF404_VERSION );
 		}
 	}
 
@@ -106,9 +106,9 @@ class Suggestions {
 		}
 
 		return sprintf(
-			'<nav class="lgs404-suggestions" aria-label="%1$s"><p class="lgs404-suggestions__title">%2$s</p><ul>%3$s</ul></nav>',
-			esc_attr__( 'Suggested pages', 'smart-404s-redirect-by-linkgecko' ),
-			esc_html__( 'Maybe you were looking for', 'smart-404s-redirect-by-linkgecko' ),
+			'<nav class="lgf404-suggestions" aria-label="%1$s"><p class="lgf404-suggestions__title">%2$s</p><ul>%3$s</ul></nav>',
+			esc_attr__( 'Suggested pages', 'gecko-404-fixer' ),
+			esc_html__( 'Maybe you were looking for', 'gecko-404-fixer' ),
 			$items
 		);
 	}
@@ -188,7 +188,7 @@ class Suggestions {
 	 * @return \WP_Post[]
 	 */
 	private static function recent(): array {
-		$ids = get_transient( 'lgs404_recent' );
+		$ids = get_transient( 'lgf404_recent' );
 
 		if ( ! is_array( $ids ) ) {
 			$ids = get_posts(
@@ -202,7 +202,7 @@ class Suggestions {
 				)
 			);
 
-			set_transient( 'lgs404_recent', $ids, HOUR_IN_SECONDS );
+			set_transient( 'lgf404_recent', $ids, HOUR_IN_SECONDS );
 		}
 
 		return array_filter( array_map( 'get_post', $ids ) );

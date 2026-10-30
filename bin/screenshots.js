@@ -19,18 +19,18 @@ const go = ( page, url ) => page.goto( base + url, { waitUntil: 'networkidle0', 
 	await page.setViewport( { width: 1280, height: 800, deviceScaleFactor: 2 } );
 
 	await go( page, '/' );
-	await go( page, '/wp-admin/tools.php?page=smart-404s' );
+	await go( page, '/wp-admin/tools.php?page=gecko-404-fixer' );
 	await page.screenshot( { path: path.join( out, 'screenshot-1.png' ) } );
 
 	// The log, with one row's inline redirect form open.
 	await page.evaluate( () => {
 		const rows = [ ...document.querySelectorAll( '.wp-list-table tbody tr' ) ];
 		const row = rows.find( ( r ) => r.textContent.includes( 'spring-rain-jackets-roundup' ) );
-		row.querySelector( '.lgs404-redirect-form' ).hidden = false;
-		row.querySelector( '.lgs404-target' ).value = '/best-rain-jackets-for-spring/';
+		row.querySelector( '.lgf404-redirect-form' ).hidden = false;
+		row.querySelector( '.lgf404-target' ).value = '/best-rain-jackets-for-spring/';
 		row.querySelector( '.row-actions' ).style.left = '0';
 		row.querySelector( '.row-actions' ).style.position = 'static';
-		document.querySelector( '.lgs404-panel' ).scrollIntoView();
+		document.querySelector( '.lgf404-panel' ).scrollIntoView();
 		window.scrollBy( 0, -40 );
 	} );
 	await page.screenshot( { path: path.join( out, 'screenshot-2.png' ) } );
@@ -68,15 +68,15 @@ const go = ( page, url ) => page.goto( base + url, { waitUntil: 'networkidle0', 
 		document.getElementById( 'wpadminbar' )?.remove();
 		document.documentElement.style.setProperty( 'margin-top', '0', 'important' );
 		// Scrolled so the suggestions and the theme's own 404 message are both in view.
-		const box = document.querySelector( '.lgs404-suggestions' ).getBoundingClientRect();
+		const box = document.querySelector( '.lgf404-suggestions' ).getBoundingClientRect();
 		window.scrollTo( 0, Math.max( 0, box.bottom + window.scrollY - innerHeight + 90 ) );
 	} );
 	await page.screenshot( { path: path.join( out, 'screenshot-4.png' ) } );
 
 	// Settings.
-	await go( page, '/wp-admin/tools.php?page=smart-404s' );
+	await go( page, '/wp-admin/tools.php?page=gecko-404-fixer' );
 	await page.evaluate( () => {
-		document.querySelector( '.lgs404-columns' ).scrollIntoView();
+		document.querySelector( '.lgf404-columns' ).scrollIntoView();
 		window.scrollBy( 0, -40 );
 	} );
 	await page.screenshot( { path: path.join( out, 'screenshot-5.png' ) } );

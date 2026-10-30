@@ -1,12 +1,12 @@
-/* Smart 404s admin screen: the inline redirect form, its page search, and the fallback fields. */
+/* Gecko 404 Fixer admin screen: the inline redirect form, its page search, and the fallback fields. */
 ( function () {
 	'use strict';
 
-	var list = document.getElementById( 'lgs404-pages' );
+	var list = document.getElementById( 'lgf404-pages' );
 	var timer;
 
 	document.addEventListener( 'click', function ( event ) {
-		var link = event.target.closest ? event.target.closest( '.lgs404-open-redirect' ) : null;
+		var link = event.target.closest ? event.target.closest( '.lgf404-open-redirect' ) : null;
 
 		if ( ! link ) {
 			return;
@@ -14,17 +14,17 @@
 
 		event.preventDefault();
 
-		var form = link.closest( 'tr' ).querySelector( '.lgs404-redirect-form' );
+		var form = link.closest( 'tr' ).querySelector( '.lgf404-redirect-form' );
 
 		form.hidden = ! form.hidden;
 
 		if ( ! form.hidden ) {
-			form.querySelector( '.lgs404-target' ).focus();
+			form.querySelector( '.lgf404-target' ).focus();
 		}
 	} );
 
 	document.addEventListener( 'input', function ( event ) {
-		if ( ! event.target.classList || ! event.target.classList.contains( 'lgs404-target' ) ) {
+		if ( ! event.target.classList || ! event.target.classList.contains( 'lgf404-target' ) ) {
 			return;
 		}
 
@@ -56,11 +56,11 @@
 		}, 200 );
 	} );
 
-	var fallback = document.getElementById( 'lgs404-fallback' );
+	var fallback = document.getElementById( 'lgf404-fallback' );
 
 	if ( fallback ) {
-		var page = document.querySelector( '.lgs404-fallback-page' );
-		var warning = document.querySelector( '.lgs404-fallback-warning' );
+		var page = document.querySelector( '.lgf404-fallback-page' );
+		var warning = document.querySelector( '.lgf404-fallback-warning' );
 		var sync = function () {
 			page.hidden = 'page' !== fallback.value;
 			warning.hidden = 'none' === fallback.value;

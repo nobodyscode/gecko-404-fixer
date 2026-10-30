@@ -1,5 +1,5 @@
 /*
- * The Smart 404s logo: a close-up of the LinkGecko gecko in a cap, drawn on the same
+ * The Gecko 404 Fixer logo: a close-up of the LinkGecko gecko in a cap, drawn on the same
  * kind of pixel grid as the LinkGecko mark. One source for every size.
  */
 const COLORS = {

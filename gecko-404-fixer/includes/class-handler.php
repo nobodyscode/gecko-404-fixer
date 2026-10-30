@@ -3,10 +3,10 @@
  * The only code that runs on the front end, and only when WordPress is about to
  * show a 404.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,7 +25,7 @@ class Handler {
 
 		$path = Url::current_path();
 
-		if ( '' === $path || Url::is_probe( $path ) || apply_filters( 'lgs404_skip_request', false, $path ) ) {
+		if ( '' === $path || Url::is_probe( $path ) || apply_filters( 'lgf404_skip_request', false, $path ) ) {
 			return;
 		}
 
@@ -132,7 +132,7 @@ class Handler {
 
 		$checked = (int) strtotime( $log['checked_at'] . ' UTC' );
 
-		return $checked < time() - self::RECHECK_AFTER || $checked <= (int) get_option( 'lgs404_content_changed', 0 );
+		return $checked < time() - self::RECHECK_AFTER || $checked <= (int) get_option( 'lgf404_content_changed', 0 );
 	}
 
 	/**
@@ -195,7 +195,7 @@ class Handler {
 			$url .= ( false === strpos( $url, '?' ) ? '?' : '&' ) . $query;
 		}
 
-		if ( wp_safe_redirect( $url, 301, 'Smart 404s' ) ) {
+		if ( wp_safe_redirect( $url, 301, 'Gecko 404 Fixer' ) ) {
 			exit;
 		}
 	}

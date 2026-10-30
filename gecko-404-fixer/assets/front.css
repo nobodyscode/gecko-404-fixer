@@ -1,21 +1,21 @@
 /* Suggestions on the 404 page. Fonts and colours are left to the theme. */
-.lgs404-suggestions {
+.lgf404-suggestions {
 	box-sizing: border-box;
 	margin: 2em auto;
 	max-width: var(--wp--style--global--content-size, 720px);
 	padding: 0 1em;
 }
 
-.lgs404-suggestions__title {
+.lgf404-suggestions__title {
 	font-weight: 600;
 	margin: 0 0 0.5em;
 }
 
-.lgs404-suggestions ul {
+.lgf404-suggestions ul {
 	margin: 0;
 	padding-left: 1.2em;
 }
 
-.lgs404-suggestions li {
+.lgf404-suggestions li {
 	margin: 0.3em 0;
 }

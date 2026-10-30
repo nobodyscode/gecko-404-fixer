@@ -27,13 +27,13 @@ add_action(
 add_action(
 	'init',
 	static function () {
-		if ( empty( $_GET['lgs404_e2e'] ) ) {
+		if ( empty( $_GET['lgf404_e2e'] ) ) {
 			return;
 		}
 
 		global $wpdb;
 
-		$op   = $_GET['lgs404_e2e'];
+		$op   = $_GET['lgf404_e2e'];
 		$slug = $_GET['slug'] ?? '';
 		$post = $slug ? get_page_by_path( $slug, OBJECT, array( 'post', 'page' ) ) : null;
 		$out  = array( 'ok' => true );
@@ -59,25 +59,25 @@ add_action(
 			case 'rule':
 				$path = '/' . trim( $_GET['path'], '/' );
 				if ( 'undo' === $_GET['kind'] ) {
-					LinkGecko\Smart404\Store::save_rule( $path, array( 'kind' => 'keep' ) );
-					LinkGecko\Smart404\Store::set_result( $path, '404' );
+					LinkGecko\Fixer404\Store::save_rule( $path, array( 'kind' => 'keep' ) );
+					LinkGecko\Fixer404\Store::set_result( $path, '404' );
 				} elseif ( 'gone' === $_GET['kind'] ) {
-					LinkGecko\Smart404\Store::save_rule( $path, array( 'kind' => 'gone' ) );
+					LinkGecko\Fixer404\Store::save_rule( $path, array( 'kind' => 'gone' ) );
 				} else {
-					LinkGecko\Smart404\Store::save_rule( $path, array( 'target_type' => 'url', 'target_url' => $_GET['to'] ) );
+					LinkGecko\Fixer404\Store::save_rule( $path, array( 'target_type' => 'url', 'target_url' => $_GET['to'] ) );
 				}
 				break;
 			case 'settings':
-				update_option( 'lgs404_settings', array_merge( LinkGecko\Smart404\Settings::all(), array( $_GET['key'] => $_GET['value'] ) ) );
+				update_option( 'lgf404_settings', array_merge( LinkGecko\Fixer404\Settings::all(), array( $_GET['key'] => $_GET['value'] ) ) );
 				break;
 			case 'log':
-				$out = $wpdb->get_results( "SELECT path, hits, result, external_hits, ref_domains FROM {$wpdb->prefix}lgs404_log", ARRAY_A );
+				$out = $wpdb->get_results( "SELECT path, hits, result, external_hits, ref_domains FROM {$wpdb->prefix}lgf404_log", ARRAY_A );
 				break;
 			case 'rules':
-				$out = $wpdb->get_results( "SELECT path, kind, origin, target_type, target_url FROM {$wpdb->prefix}lgs404_redirects", ARRAY_A );
+				$out = $wpdb->get_results( "SELECT path, kind, origin, target_type, target_url FROM {$wpdb->prefix}lgf404_redirects", ARRAY_A );
 				break;
 			case 'stats':
-				$out = LinkGecko\Smart404\Store::stats();
+				$out = LinkGecko\Fixer404\Store::stats();
 				break;
 			case 'redirection':
 				$schema = new Redirection\Database\Schema\Latest();
@@ -86,7 +86,7 @@ add_action(
 				$out   = is_wp_error( $out ) ? array( 'ok' => false, 'error' => $out->get_error_message() ) : array( 'ok' => true );
 				break;
 			case 'product':
-				$id = (int) get_option( 'lgs404_test_product' );
+				$id = (int) get_option( 'lgf404_test_product' );
 				if ( 'rename' === $_GET['do'] ) {
 					wp_update_post( array( 'ID' => $id, 'post_name' => 'crimson-rain-jacket' ) );
 				} else {
@@ -94,7 +94,7 @@ add_action(
 				}
 				break;
 			case 'product_cat':
-				wp_update_term( (int) get_option( 'lgs404_test_cat' ), 'product_cat', array( 'slug' => 'wet-weather' ) );
+				wp_update_term( (int) get_option( 'lgf404_test_cat' ), 'product_cat', array( 'slug' => 'wet-weather' ) );
 				break;
 			case 'plugins':
 				$out = get_option( 'active_plugins' );
@@ -104,12 +104,12 @@ add_action(
 				break;
 			case 'uninstall':
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
-				deactivate_plugins( 'smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php' );
-				uninstall_plugin( 'smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php' );
+				deactivate_plugins( 'gecko-404-fixer/gecko-404-fixer.php' );
+				uninstall_plugin( 'gecko-404-fixer/gecko-404-fixer.php' );
 				$out = array(
-					'tables'  => $wpdb->get_col( "SHOW TABLES LIKE '%lgs404%'" ),
-					'options' => $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '%lgs404%'" ),
-					'cron'    => wp_next_scheduled( 'lgs404_daily' ),
+					'tables'  => $wpdb->get_col( "SHOW TABLES LIKE '%lgf404%'" ),
+					'options' => $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '%lgf404%'" ),
+					'cron'    => wp_next_scheduled( 'lgf404_daily' ),
 				);
 				break;
 			case 'reditems':
@@ -123,7 +123,7 @@ add_action(
 				require WP_CONTENT_DIR . '/e2e-demo-data.php';
 				break;
 			case 'trim':
-				LinkGecko\Smart404\Install::trim();
+				LinkGecko\Fixer404\Install::trim();
 				break;
 		}
 

@@ -1,5 +1,5 @@
 {
- "landingPage": "/wp-admin/tools.php?page=smart-404s",
+ "landingPage": "/wp-admin/tools.php?page=gecko-404-fixer",
  "login": true,
  "steps": [
   {
@@ -12,7 +12,7 @@
   },
   {
    "step": "activatePlugin",
-   "pluginPath": "smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php"
+   "pluginPath": "gecko-404-fixer/gecko-404-fixer.php"
   },
   {
    "step": "installTheme",
@@ -70,7 +70,7 @@
   },
   {
    "step": "runPHP",
-   "code": "<?php require '/wordpress/wp-load.php'; if(class_exists('WC_Product_Simple')){ $c=wp_insert_term('Rain Gear','product_cat'); $p=new WC_Product_Simple(); $p->set_name('Blue rain jacket'); $p->set_slug('blue-rain-jacket'); $p->set_status('publish'); $p->set_regular_price('10'); $p->set_category_ids([$c['term_id']]); $p->save(); $q=new WC_Product_Simple(); $q->set_name('Red rain jacket'); $q->set_slug('red-rain-jacket'); $q->set_status('publish'); $q->set_regular_price('10'); $q->set_category_ids([$c['term_id']]); $q->save(); update_option('lgs404_test_cat',$c['term_id']); update_option('lgs404_test_product',$q->get_id()); } flush_rewrite_rules(); echo 'ok';"
+   "code": "<?php require '/wordpress/wp-load.php'; if(class_exists('WC_Product_Simple')){ $c=wp_insert_term('Rain Gear','product_cat'); $p=new WC_Product_Simple(); $p->set_name('Blue rain jacket'); $p->set_slug('blue-rain-jacket'); $p->set_status('publish'); $p->set_regular_price('10'); $p->set_category_ids([$c['term_id']]); $p->save(); $q=new WC_Product_Simple(); $q->set_name('Red rain jacket'); $q->set_slug('red-rain-jacket'); $q->set_status('publish'); $q->set_regular_price('10'); $q->set_category_ids([$c['term_id']]); $q->save(); update_option('lgf404_test_cat',$c['term_id']); update_option('lgf404_test_product',$q->get_id()); } flush_rewrite_rules(); echo 'ok';"
   }
  ]
 }

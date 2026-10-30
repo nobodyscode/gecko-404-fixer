@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # Builds both zips in dist/:
-#   smart-404s-redirect-by-linkgecko-<v>.zip             the release itself
-#   smart-404s-redirect-by-linkgecko-<v>-submission.zip  for the first wordpress.org upload only. Its
-#     short name is what locks the smart-404s-redirect-by-linkgecko slug.
+#   gecko-404-fixer-<v>.zip             the release itself
+#   gecko-404-fixer-<v>-submission.zip  for the first wordpress.org upload only. Its
+#     short name is what locks the gecko-404-fixer slug.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-V=$(grep -m1 "Version:" smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php | sed 's/.*Version: *//' | tr -d '\r')
+V=$(grep -m1 "Version:" gecko-404-fixer/gecko-404-fixer.php | sed 's/.*Version: *//' | tr -d '\r')
 rm -rf dist; mkdir -p dist
-zip -rq "dist/smart-404s-redirect-by-linkgecko-$V.zip" smart-404s-redirect-by-linkgecko -x "*.DS_Store"
+zip -rq "dist/gecko-404-fixer-$V.zip" gecko-404-fixer -x "*.DS_Store"
 
-T=$(mktemp -d); cp -R smart-404s-redirect-by-linkgecko "$T/"
-sed -i '' 's/^ \* Plugin Name: .*/ * Plugin Name:       Smart 404s Redirect by LinkGecko/' "$T/smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php"
-sed -i '' '1s/.*/=== Smart 404s Redirect by LinkGecko ===/' "$T/smart-404s-redirect-by-linkgecko/readme.txt"
-( cd "$T" && zip -rq "$OLDPWD/dist/smart-404s-redirect-by-linkgecko-$V-submission.zip" smart-404s-redirect-by-linkgecko -x "*.DS_Store" )
+T=$(mktemp -d); cp -R gecko-404-fixer "$T/"
+sed -i '' 's/^ \* Plugin Name: .*/ * Plugin Name:       Gecko 404 Fixer/' "$T/gecko-404-fixer/gecko-404-fixer.php"
+sed -i '' '1s/.*/=== Gecko 404 Fixer ===/' "$T/gecko-404-fixer/readme.txt"
+( cd "$T" && zip -rq "$OLDPWD/dist/gecko-404-fixer-$V-submission.zip" gecko-404-fixer -x "*.DS_Store" )
 rm -rf "$T"
 ls -la dist | awk 'NR>3{print $5, $9}'

@@ -3,10 +3,10 @@
  * Notices content changing, so the old URLs can be redirected before anyone hits
  * them. Nothing here runs on page views.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -103,7 +103,7 @@ class Tracker {
 	 */
 	public static function status_changed( $new_status, $old_status ): void {
 		if ( 'publish' === $new_status && 'publish' !== $old_status ) {
-			update_option( 'lgs404_content_changed', time(), false );
+			update_option( 'lgf404_content_changed', time(), false );
 		}
 	}
 

@@ -6,7 +6,7 @@
 const puppeteer = require( 'puppeteer-core' );
 
 const base = process.argv[ 2 ];
-const SCREEN = '/wp-admin/tools.php?page=smart-404s';
+const SCREEN = '/wp-admin/tools.php?page=gecko-404-fixer';
 let fails = 0;
 let checks = 0;
 
@@ -35,7 +35,7 @@ const check = ( name, ok, detail ) => {
 
 	await go( '/' );
 	await go( SCREEN );
-	check( 'screen opens', ( await page.title() ).includes( 'Smart 404s' ), await page.title() );
+	check( 'screen opens', ( await page.title() ).includes( 'Gecko 404 Fixer' ), await page.title() );
 
 	// Produce log rows as a visitor would.
 	for ( const url of [ '/flow-open-one-qq/', '/flow-open-two-qq/', '/how-to-fix-404-errorss/' ] ) {
@@ -46,12 +46,12 @@ const check = ( name, ok, detail ) => {
 
 	// Redirect to… through the inline form.
 	let tr = ( await row( '/flow-open-one-qq' ) ).asElement();
-	await tr.$eval( '.lgs404-open-redirect', ( a ) => a.click() );
-	check( 'inline form opens', await tr.$eval( '.lgs404-redirect-form', ( f ) => ! f.hidden ) );
-	await tr.$eval( '.lgs404-target', ( i ) => {
+	await tr.$eval( '.lgf404-open-redirect', ( a ) => a.click() );
+	check( 'inline form opens', await tr.$eval( '.lgf404-redirect-form', ( f ) => ! f.hidden ) );
+	await tr.$eval( '.lgf404-target', ( i ) => {
 		i.value = '/contact-us/';
 	} );
-	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), tr.$eval( '.lgs404-redirect-form', ( f ) => f.requestSubmit() ) ] );
+	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), tr.$eval( '.lgf404-redirect-form', ( f ) => f.requestSubmit() ) ] );
 	check( 'redirect saved notice', ( await page.content() ).includes( 'notice-success' ) );
 	const hits = await page.evaluate( async ( u ) => ( await fetch( u, { redirect: 'follow' } ) ).url, base + '/flow-open-one-qq/' );
 	check( 'manual redirect works', hits.includes( '/contact-us' ), hits );
@@ -59,38 +59,38 @@ const check = ( name, ok, detail ) => {
 	// An outside URL is refused.
 	await go( SCREEN );
 	tr = ( await row( '/flow-open-two-qq' ) ).asElement();
-	await tr.$eval( '.lgs404-open-redirect', ( a ) => a.click() );
-	await tr.$eval( '.lgs404-target', ( i ) => {
+	await tr.$eval( '.lgf404-open-redirect', ( a ) => a.click() );
+	await tr.$eval( '.lgf404-target', ( i ) => {
 		i.value = 'https://evil.example/x';
 	} );
-	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), tr.$eval( '.lgs404-redirect-form', ( f ) => f.requestSubmit() ) ] );
+	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), tr.$eval( '.lgf404-redirect-form', ( f ) => f.requestSubmit() ) ] );
 	check( 'outside URL refused', ( await page.content() ).includes( 'notice-error' ) );
 
 	// Mark as gone.
 	tr = ( await row( '/flow-open-two-qq' ) ).asElement();
-	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), tr.$eval( '.lgs404_gone a', ( a ) => a.click() ) ] );
+	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), tr.$eval( '.lgf404_gone a', ( a ) => a.click() ) ] );
 	check( 'marked as gone returns 410', 410 === await status( '/flow-open-two-qq/' ), await status( '/flow-open-two-qq/' ) );
 
 	// Undo an automatic fix, then it stays a 404.
 	await go( SCREEN );
 	tr = ( await row( '/how-to-fix-404-errorss' ) ).asElement();
-	check( 'automatic fix is listed with Undo', !! ( tr && await tr.$( '.lgs404_undo a' ) ) );
-	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), tr.$eval( '.lgs404_undo a', ( a ) => a.click() ) ] );
+	check( 'automatic fix is listed with Undo', !! ( tr && await tr.$( '.lgf404_undo a' ) ) );
+	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), tr.$eval( '.lgf404_undo a', ( a ) => a.click() ) ] );
 	check( 'undo leaves a 404', 404 === await status( '/how-to-fix-404-errorss/' ), await status( '/how-to-fix-404-errorss/' ) );
 
 	// A forged action with no nonce is refused.
-	const forged = await page.evaluate( async ( u ) => ( await fetch( u ) ).status, base + '/wp-admin/admin-post.php?action=lgs404_rule&op=gone&path=%2Fhow-to-fix-404-errors' );
+	const forged = await page.evaluate( async ( u ) => ( await fetch( u ) ).status, base + '/wp-admin/admin-post.php?action=lgf404_rule&op=gone&path=%2Fhow-to-fix-404-errors' );
 	check( 'action without a nonce is refused', 403 === forged, forged );
 
 	// Settings.
 	await go( SCREEN );
-	check( 'page field hidden until needed', await page.$eval( '.lgs404-fallback-page', ( p ) => p.hidden ) );
-	await page.select( '#lgs404-fallback', 'page' );
-	check( 'page field appears', await page.$eval( '.lgs404-fallback-page', ( p ) => ! p.hidden ) );
-	await page.select( '#lgs404-fallback', 'none' );
-	await page.select( '#lgs404-strictness', 'strict' );
-	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), page.$eval( '.lgs404-columns form[action="options.php"]', ( f ) => f.requestSubmit() ) ] );
-	check( 'settings save', 'strict' === await page.$eval( '#lgs404-strictness', ( s ) => s.value ) );
+	check( 'page field hidden until needed', await page.$eval( '.lgf404-fallback-page', ( p ) => p.hidden ) );
+	await page.select( '#lgf404-fallback', 'page' );
+	check( 'page field appears', await page.$eval( '.lgf404-fallback-page', ( p ) => ! p.hidden ) );
+	await page.select( '#lgf404-fallback', 'none' );
+	await page.select( '#lgf404-strictness', 'strict' );
+	await Promise.all( [ page.waitForNavigation( { waitUntil: 'networkidle0', timeout: 120000 } ), page.$eval( '.lgf404-columns form[action="options.php"]', ( f ) => f.requestSubmit() ) ] );
+	check( 'settings save', 'strict' === await page.$eval( '#lgf404-strictness', ( s ) => s.value ) );
 
 	// Search and tabs.
 	await go( SCREEN + '&view=open' );
@@ -110,18 +110,18 @@ const check = ( name, ok, detail ) => {
 	check( 'odd sort values are ignored', ( await hitCounts() ).length > 1 );
 
 	// CTA links are tagged and open LinkGecko.
-	const cta = await page.$eval( '.lgs404-cta a', ( a ) => a.href );
-	check( 'CTA carries UTM tags', cta.includes( 'linkgecko.com' ) && cta.includes( 'utm_source=wp-plugin' ) && cta.includes( 'utm_campaign=smart-404s' ), cta );
+	const cta = await page.$eval( '.lgf404-cta a', ( a ) => a.href );
+	check( 'CTA carries UTM tags', cta.includes( 'linkgecko.com' ) && cta.includes( 'utm_source=wp-plugin' ) && cta.includes( 'utm_campaign=gecko-404-fixer' ), cta );
 
 	// The block is available to the editor.
 	await go( '/wp-admin/site-editor.php' ).catch( () => {} );
 	const registered = await page.evaluate( async ( u ) => {
-		const r = await window.wp.apiFetch( { path: '/wp/v2/block-types/smart-404s-redirect-by-linkgecko/suggestions' } ).catch( () => null );
+		const r = await window.wp.apiFetch( { path: '/wp/v2/block-types/gecko-404-fixer/suggestions' } ).catch( () => null );
 		return r && r.name;
 	}, base ).catch( () => null );
-	check( 'block is registered', 'smart-404s-redirect-by-linkgecko/suggestions' === registered, registered );
+	check( 'block is registered', 'gecko-404-fixer/suggestions' === registered, registered );
 
-	check( 'no JavaScript errors from the plugin', ! errors.some( ( e ) => e.includes( 'lgs404' ) || e.includes( 'admin.js' ) ), errors.join( ' | ' ) );
+	check( 'no JavaScript errors from the plugin', ! errors.some( ( e ) => e.includes( 'lgf404' ) || e.includes( 'admin.js' ) ), errors.join( ' | ' ) );
 
 	await browser.close();
 	console.log( `\n${ checks - fails } of ${ checks } checks passed` );

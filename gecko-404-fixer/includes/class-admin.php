@@ -1,17 +1,17 @@
 <?php
 /**
- * Tools → Smart 404s. One page: results, the log, other sites' links, settings.
+ * Tools → Gecko 404 Fixer. One page: results, the log, other sites' links, settings.
  *
- * @package LinkGecko\Smart404
+ * @package LinkGecko\Fixer404
  */
 
-namespace LinkGecko\Smart404;
+namespace LinkGecko\Fixer404;
 
 defined( 'ABSPATH' ) || exit;
 
 class Admin {
 
-	const SLUG = 'smart-404s';
+	const SLUG = 'gecko-404-fixer';
 
 	/** How many fixes the plugin should have earned before asking for a review. */
 	const REVIEW_AFTER = 10;
@@ -22,9 +22,9 @@ class Admin {
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue' ) );
-		add_action( 'admin_post_lgs404_rule', array( __CLASS__, 'handle_rule' ) );
-		add_action( 'admin_post_lgs404_dismiss_review', array( __CLASS__, 'dismiss_review' ) );
-		add_filter( 'plugin_action_links_' . plugin_basename( LGS404_FILE ), array( __CLASS__, 'action_links' ) );
+		add_action( 'admin_post_lgf404_rule', array( __CLASS__, 'handle_rule' ) );
+		add_action( 'admin_post_lgf404_dismiss_review', array( __CLASS__, 'dismiss_review' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( LGF404_FILE ), array( __CLASS__, 'action_links' ) );
 	}
 
 	public static function url(): string {
@@ -39,7 +39,7 @@ class Admin {
 			array(
 				'utm_source'   => 'wp-plugin',
 				'utm_medium'   => 'admin',
-				'utm_campaign' => 'smart-404s',
+				'utm_campaign' => 'gecko-404-fixer',
 				'utm_content'  => $placement,
 			),
 			self::LINKGECKO
@@ -48,8 +48,8 @@ class Admin {
 
 	public static function menu(): void {
 		add_management_page(
-			__( 'Smart 404s', 'smart-404s-redirect-by-linkgecko' ),
-			__( 'Smart 404s', 'smart-404s-redirect-by-linkgecko' ),
+			__( 'Gecko 404 Fixer', 'gecko-404-fixer' ),
+			__( 'Gecko 404 Fixer', 'gecko-404-fixer' ),
 			'manage_options',
 			self::SLUG,
 			array( __CLASS__, 'render' )
@@ -63,7 +63,7 @@ class Admin {
 	public static function action_links( $links ): array {
 		array_unshift(
 			$links,
-			sprintf( '<a href="%1$s">%2$s</a>', esc_url( self::url() ), esc_html__( 'Open', 'smart-404s-redirect-by-linkgecko' ) )
+			sprintf( '<a href="%1$s">%2$s</a>', esc_url( self::url() ), esc_html__( 'Open', 'gecko-404-fixer' ) )
 		);
 
 		return $links;
@@ -71,7 +71,7 @@ class Admin {
 
 	public static function register_settings(): void {
 		register_setting(
-			'lgs404',
+			'lgf404',
 			Settings::OPTION,
 			array(
 				'type'              => 'array',
@@ -89,8 +89,8 @@ class Admin {
 			return;
 		}
 
-		wp_enqueue_style( 'lgs404-admin', LGS404_URL . 'assets/admin.css', array(), LGS404_VERSION );
-		wp_enqueue_script( 'lgs404-admin', LGS404_URL . 'assets/admin.js', array( 'wp-api-fetch' ), LGS404_VERSION, true );
+		wp_enqueue_style( 'lgf404-admin', LGF404_URL . 'assets/admin.css', array(), LGF404_VERSION );
+		wp_enqueue_script( 'lgf404-admin', LGF404_URL . 'assets/admin.js', array( 'wp-api-fetch' ), LGF404_VERSION, true );
 	}
 
 	/**
@@ -98,10 +98,10 @@ class Admin {
 	 */
 	public static function handle_rule(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to do that.', 'smart-404s-redirect-by-linkgecko' ), 403 );
+			wp_die( esc_html__( 'You do not have permission to do that.', 'gecko-404-fixer' ), 403 );
 		}
 
-		check_admin_referer( 'lgs404_rule' );
+		check_admin_referer( 'lgf404_rule' );
 
 		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- normalised by Url::from_uri() and Url::target_from_input().
 		$op     = isset( $_REQUEST['op'] ) ? sanitize_key( wp_unslash( $_REQUEST['op'] ) ) : '';
@@ -124,7 +124,7 @@ class Admin {
 			$notice = self::save_manual_redirect( $path, $target );
 		}
 
-		wp_safe_redirect( add_query_arg( 'lgs404_notice', $notice, self::url() ) );
+		wp_safe_redirect( add_query_arg( 'lgf404_notice', $notice, self::url() ) );
 		exit;
 	}
 
@@ -157,11 +157,11 @@ class Admin {
 
 	public static function dismiss_review(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to do that.', 'smart-404s-redirect-by-linkgecko' ), 403 );
+			wp_die( esc_html__( 'You do not have permission to do that.', 'gecko-404-fixer' ), 403 );
 		}
 
-		check_admin_referer( 'lgs404_dismiss_review' );
-		update_option( 'lgs404_review_dismissed', 1, false );
+		check_admin_referer( 'lgf404_dismiss_review' );
+		update_option( 'lgf404_review_dismissed', 1, false );
 
 		wp_safe_redirect( self::url() );
 		exit;
@@ -176,41 +176,41 @@ class Admin {
 		$result = (string) $item['result'];
 
 		if ( Store::RESULT_GONE === $result ) {
-			return self::badge( __( 'Gone (410)', 'smart-404s-redirect-by-linkgecko' ), 'muted' );
+			return self::badge( __( 'Gone (410)', 'gecko-404-fixer' ), 'muted' );
 		}
 
 		if ( Store::RESULT_FALLBACK === $result ) {
-			return self::badge( __( 'Sent to fallback', 'smart-404s-redirect-by-linkgecko' ), 'muted' );
+			return self::badge( __( 'Sent to fallback', 'gecko-404-fixer' ), 'muted' );
 		}
 
 		if ( Store::RESULT_FIXED === $result ) {
 			$url = empty( $item['target_type'] ) ? '' : Matcher::resolve( $item );
 
 			return self::badge( self::origin_label( (string) ( $item['origin'] ?? '' ) ), 'fixed' )
-				. ( '' === $url ? '' : sprintf( '<span class="lgs404-arrow">→ <a href="%1$s" target="_blank" rel="noopener">%2$s</a></span>', esc_url( $url ), esc_html( Url::path_of( $url ) ) ) );
+				. ( '' === $url ? '' : sprintf( '<span class="lgf404-arrow">→ <a href="%1$s" target="_blank" rel="noopener">%2$s</a></span>', esc_url( $url ), esc_html( Url::path_of( $url ) ) ) );
 		}
 
 		if ( Store::KIND_KEEP === ( $item['kind'] ?? '' ) ) {
-			return self::badge( __( '404, as you chose', 'smart-404s-redirect-by-linkgecko' ), 'muted' );
+			return self::badge( __( '404, as you chose', 'gecko-404-fixer' ), 'muted' );
 		}
 
-		return self::badge( __( 'Still 404', 'smart-404s-redirect-by-linkgecko' ), 'open' );
+		return self::badge( __( 'Still 404', 'gecko-404-fixer' ), 'open' );
 	}
 
 	private static function origin_label( string $origin ): string {
 		$labels = array(
-			'renamed' => __( 'Renamed', 'smart-404s-redirect-by-linkgecko' ),
-			'deleted' => __( 'Deleted', 'smart-404s-redirect-by-linkgecko' ),
-			'near'    => __( 'Typo fixed', 'smart-404s-redirect-by-linkgecko' ),
-			'core'    => __( 'Matched', 'smart-404s-redirect-by-linkgecko' ),
-			'manual'  => __( 'Your redirect', 'smart-404s-redirect-by-linkgecko' ),
+			'renamed' => __( 'Renamed', 'gecko-404-fixer' ),
+			'deleted' => __( 'Deleted', 'gecko-404-fixer' ),
+			'near'    => __( 'Typo fixed', 'gecko-404-fixer' ),
+			'core'    => __( 'Matched', 'gecko-404-fixer' ),
+			'manual'  => __( 'Your redirect', 'gecko-404-fixer' ),
 		);
 
-		return $labels[ $origin ] ?? __( 'Fixed', 'smart-404s-redirect-by-linkgecko' );
+		return $labels[ $origin ] ?? __( 'Fixed', 'gecko-404-fixer' );
 	}
 
 	private static function badge( string $label, string $tone ): string {
-		return sprintf( '<span class="lgs404-badge lgs404-badge--%1$s">%2$s</span>', esc_attr( $tone ), esc_html( $label ) );
+		return sprintf( '<span class="lgf404-badge lgf404-badge--%1$s">%2$s</span>', esc_attr( $tone ), esc_html( $label ) );
 	}
 
 	public static function render(): void {
@@ -225,15 +225,15 @@ class Admin {
 
 		$table->prepare_items();
 
-		include LGS404_DIR . 'includes/view-admin.php';
+		include LGF404_DIR . 'includes/view-admin.php';
 	}
 
 	private static function notice_text( string $key ): string {
 		$notices = array(
-			'saved'      => __( 'Saved.', 'smart-404s-redirect-by-linkgecko' ),
-			'bad_path'   => __( 'That URL could not be read, so nothing changed.', 'smart-404s-redirect-by-linkgecko' ),
-			'bad_target' => __( 'Redirects can only point to a page on this site. Nothing changed.', 'smart-404s-redirect-by-linkgecko' ),
-			'loop'       => __( 'That would send visitors in a circle, so it was not saved.', 'smart-404s-redirect-by-linkgecko' ),
+			'saved'      => __( 'Saved.', 'gecko-404-fixer' ),
+			'bad_path'   => __( 'That URL could not be read, so nothing changed.', 'gecko-404-fixer' ),
+			'bad_target' => __( 'Redirects can only point to a page on this site. Nothing changed.', 'gecko-404-fixer' ),
+			'loop'       => __( 'That would send visitors in a circle, so it was not saved.', 'gecko-404-fixer' ),
 		);
 
 		return $notices[ $key ] ?? '';
@@ -244,7 +244,7 @@ class Admin {
 	 */
 	public static function print_notice(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only picks which fixed message to show.
-		$key  = isset( $_GET['lgs404_notice'] ) ? sanitize_key( wp_unslash( $_GET['lgs404_notice'] ) ) : '';
+		$key  = isset( $_GET['lgf404_notice'] ) ? sanitize_key( wp_unslash( $_GET['lgf404_notice'] ) ) : '';
 		$text = self::notice_text( $key );
 
 		if ( '' !== $text ) {
@@ -257,6 +257,6 @@ class Admin {
 	}
 
 	public static function should_ask_for_review(): bool {
-		return ! get_option( 'lgs404_review_dismissed' ) && Store::fixed_total() >= self::REVIEW_AFTER;
+		return ! get_option( 'lgf404_review_dismissed' ) && Store::fixed_total() >= self::REVIEW_AFTER;
 	}
 }

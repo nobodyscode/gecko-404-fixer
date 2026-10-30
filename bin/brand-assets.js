@@ -26,13 +26,13 @@ background-image:radial-gradient(#ffffff2e ${ 1.1 * k }px,transparent ${ 1.3 * k
 .r{background:#fff;color:#0a0b0d;border-radius:${ 12 * k }px;padding:${ 12 * k }px ${ 14 * k }px;font:500 ${ 11 * k }px 'Geist Mono',monospace;flex:none}
 .dead{color:#d92d20;text-decoration:line-through}.row{display:flex;align-items:center;gap:${ 7 * k }px;margin-top:${ 7 * k }px}
 .p{background:${ BLUE };color:#fff;border-radius:999px;padding:${ 2 * k }px ${ 7 * k }px;font-size:${ 10 * k }px}
-</style></head><body><div class="in"><div class="l">${ logo }</div><div class="t"><div class="m">by LinkGecko</div><h1>Smart 404s</h1><p>Fix 404 errors the right way</p></div>
+</style></head><body><div class="in"><div class="l">${ logo }</div><div class="t"><div class="m">by LinkGecko</div><h1>Gecko 404 Fixer</h1><p>Fix 404 errors the right way</p></div>
 <div class="r"><div class="dead">/how-to-fix-404-erors</div><div class="row"><span class="p">301</span><span>/how-to-fix-404-errors/</span></div></div></div></body></html>`;
 
 ( async () => {
 	fs.mkdirSync( out, { recursive: true } );
 	fs.writeFileSync( path.join( out, 'icon.svg' ), logo );
-	fs.writeFileSync( path.join( __dirname, '../smart-404s-redirect-by-linkgecko/assets/logo.svg' ), logo );
+	fs.writeFileSync( path.join( __dirname, '../gecko-404-fixer/assets/logo.svg' ), logo );
 
 	const browser = await puppeteer.launch( { executablePath: CHROME, headless: 'new' } );
 	const page = await browser.newPage();

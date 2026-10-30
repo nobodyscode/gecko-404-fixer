@@ -1,9 +1,9 @@
 {
-	"landingPage": "/wp-admin/tools.php?page=smart-404s",
+	"landingPage": "/wp-admin/tools.php?page=gecko-404-fixer",
 	"login": true,
 	"steps": [
 		{ "step": "setSiteOptions", "options": { "permalink_structure": "/%postname%/", "blogname": "Northwind Journal", "blogdescription": "" } },
-		{ "step": "activatePlugin", "pluginPath": "smart-404s-redirect-by-linkgecko/smart-404s-redirect-by-linkgecko.php" },
+		{ "step": "activatePlugin", "pluginPath": "gecko-404-fixer/gecko-404-fixer.php" },
 		{ "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; require_once ABSPATH.'wp-admin/includes/taxonomy.php'; $gear=wp_create_category('Trail Gear'); $guides=wp_create_category('Guides'); foreach([['How to fix 404 errors','how-to-fix-404-errors',$guides],['Choosing hiking boots','choosing-hiking-boots',$gear],['Best rain jackets for spring','best-rain-jackets-for-spring',$gear],['Packing list for a weekend hike','packing-list-weekend-hike',$guides],['Winter camping basics','winter-camping-basics',$guides],['Best tents of 2024','best-tents-of-2024',$gear],['Best tents of 2025','best-tents-of-2025',$gear],['Old sleeping bag review','old-sleeping-bag-review',$gear],['Uncategorised note','uncategorised-note',1],['Trail shoes for men','trail-shoes-men',$gear],['Trail shoes for a man','trail-shoes-man',$gear]] as $p){wp_insert_post(['post_title'=>$p[0],'post_name'=>$p[1],'post_status'=>'publish','post_category'=>[$p[2]],'post_content'=>'Sample content about '.$p[0]]);} $parent=wp_insert_post(['post_title'=>'Destinations','post_name'=>'destinations','post_type'=>'page','post_status'=>'publish']); wp_insert_post(['post_title'=>'Lake District','post_name'=>'lake-district','post_type'=>'page','post_parent'=>$parent,'post_status'=>'publish']); wp_insert_post(['post_title'=>'Contact us','post_name'=>'contact-us','post_type'=>'page','post_status'=>'publish']); flush_rewrite_rules(); echo 'seeded';" }
 	]
 }
