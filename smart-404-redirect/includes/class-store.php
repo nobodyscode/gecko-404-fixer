@@ -294,10 +294,8 @@ class Store {
 	public static function log_page( array $args ): array {
 		global $wpdb;
 
-		$log    = self::log_table();
-		$rules  = self::rules_table();
-		$where  = '1=1';
-		$params = array();
+		$log   = self::log_table();
+		$rules = self::rules_table();
 
 		$views = array(
 			'fixed' => self::RESULT_FIXED,
@@ -305,32 +303,43 @@ class Store {
 			'gone'  => self::RESULT_GONE,
 		);
 
-		if ( isset( $views[ $args['view'] ?? '' ] ) ) {
-			$where   .= ' AND l.result = %s';
-			$params[] = $views[ $args['view'] ];
-		}
+		// An empty value switches its filter off, so the statement itself stays fixed.
+		$result = $views[ $args['view'] ?? '' ] ?? '';
+		$search = empty( $args['search'] ) ? '' : '%' . $wpdb->esc_like( strtolower( (string) $args['search'] ) ) . '%';
 
-		if ( ! empty( $args['search'] ) ) {
-			$where   .= ' AND l.path LIKE %s';
-			$params[] = '%' . $wpdb->esc_like( strtolower( (string) $args['search'] ) ) . '%';
-		}
-
-		$column = 'hits' === ( $args['orderby'] ?? '' ) ? 'l.hits' : 'l.last_seen';
+		$column = 'hits' === ( $args['orderby'] ?? '' ) ? 'hits' : 'last_seen';
 		$order  = 'asc' === strtolower( (string) ( $args['order'] ?? '' ) ) ? 'ASC' : 'DESC';
 		$limit  = max( 1, (int) ( $args['per_page'] ?? 20 ) );
 		$offset = max( 0, ( (int) ( $args['page'] ?? 1 ) - 1 ) * $limit );
 
-		// $where and the ORDER BY are built above from fixed strings only.
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders
-		$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM %i l WHERE {$where}", array_merge( array( $log ), $params ) ) );
-		$rows  = (array) $wpdb->get_results(
+		$total = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT l.*, r.kind, r.origin, r.target_type, r.target_id, r.target_url FROM %i l LEFT JOIN %i r ON r.url_hash = l.url_hash WHERE {$where} ORDER BY {$column} {$order}, l.id DESC LIMIT %d OFFSET %d",
-				array_merge( array( $log, $rules ), $params, array( $limit, $offset ) )
+				"SELECT COUNT(*) FROM %i l WHERE ( %s = '' OR l.result = %s ) AND ( %s = '' OR l.path LIKE %s )",
+				$log,
+				$result,
+				$result,
+				$search,
+				$search
+			)
+		);
+
+		$rows = (array) $wpdb->get_results( // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $order can only be ASC or DESC, as chosen above.
+			$wpdb->prepare(
+				// $order can only be ASC or DESC, as chosen above.
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT l.*, r.kind, r.origin, r.target_type, r.target_id, r.target_url FROM %i l LEFT JOIN %i r ON r.url_hash = l.url_hash WHERE ( %s = '' OR l.result = %s ) AND ( %s = '' OR l.path LIKE %s ) ORDER BY %i {$order}, l.id DESC LIMIT %d OFFSET %d",
+				$log,
+				$rules,
+				$result,
+				$result,
+				$search,
+				$search,
+				$column,
+				$limit,
+				$offset
 			),
 			ARRAY_A
 		);
-		// phpcs:enable
 
 		return array(
 			'rows'  => $rows,

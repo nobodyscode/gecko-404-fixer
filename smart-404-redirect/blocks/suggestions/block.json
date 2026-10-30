@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "smart-404-redirect/suggestions",
 	"title": "404 Suggestions",
 	"category": "widgets",

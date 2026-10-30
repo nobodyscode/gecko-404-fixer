@@ -98,6 +98,17 @@ const check = ( name, ok, detail ) => {
 	await go( SCREEN + '&s=flow-open-two' );
 	check( 'search', await page.evaluate( () => document.querySelector( '.wp-list-table tbody' ).textContent.includes( 'flow-open-two-qq' ) ) );
 
+	// Sorting, both ways. The busiest URL is the one reached most in this run.
+	const hitCounts = () => page.$$eval( '.wp-list-table tbody td.column-hits', ( c ) => c.map( ( x ) => parseInt( x.textContent, 10 ) ) );
+	await go( SCREEN + '&orderby=hits&order=asc' );
+	const asc = await hitCounts();
+	check( 'sorts by hits ascending', asc.length > 1 && asc.every( ( n, i ) => 0 === i || asc[ i - 1 ] <= n ), asc.join( ',' ) );
+	await go( SCREEN + '&orderby=hits&order=desc' );
+	const desc = await hitCounts();
+	check( 'sorts by hits descending', desc.length > 1 && desc.every( ( n, i ) => 0 === i || desc[ i - 1 ] >= n ), desc.join( ',' ) );
+	await go( SCREEN + "&orderby=hits%27&order=asc%27" );
+	check( 'odd sort values are ignored', ( await hitCounts() ).length > 1 );
+
 	// CTA links are tagged and open LinkGecko.
 	const cta = await page.$eval( '.lgs404-cta a', ( a ) => a.href );
 	check( 'CTA carries UTM tags', cta.includes( 'linkgecko.com' ) && cta.includes( 'utm_source=wp-plugin' ) && cta.includes( 'utm_campaign=smart-404s' ), cta );

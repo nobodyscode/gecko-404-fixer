@@ -37,6 +37,8 @@ tests/run-mysql.sh /tmp/lgs404-stack path/to/redirection        # MariaDB, with 
 NODE_PATH=<puppeteer-core> node tests/admin-flow.js <site url>  # the admin screen, with real nonces
 ```
 
+Before any release, also run the real [Plugin Check](https://wordpress.org/plugins/plugin-check/) on a WordPress site, with `wp plugin check smart-404-redirect --include-experimental`. It crashes inside Playground, and its readme, header and block checks are not covered by running its code rulesets alone.
+
 Playground uses SQLite and a CLI SAPI, so `run-mysql.sh` is the run that proves the SQL. Redirection also turns itself off under a CLI SAPI, so only that run exercises its rules.
 
 ## Publishing on wordpress.org
