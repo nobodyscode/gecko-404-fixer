@@ -1,4 +1,4 @@
-=== Gecko 404 Fixer by LinkGecko – Fix 404 Errors with Automatic 301 Redirects ===
+=== Gecko 404 Fixer ===
 Contributors: him-anshu
 Tags: 404, 404 error, redirect, 301 redirect, broken links
 Requires at least: 6.2

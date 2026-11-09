@@ -44,6 +44,5 @@ Playground uses SQLite and a CLI SAPI, so `run-mysql.sh` is the run that proves 
 ## Publishing on wordpress.org
 
 1. `bin/build.sh`
-2. Upload `dist/gecko-404-fixer-1.0.0-submission.zip` at <https://wordpress.org/plugins/developers/add/>. Its short name locks the slug. Check the slug in the form before submitting.
+2. Upload `dist/gecko-404-fixer-1.0.0.zip` at <https://wordpress.org/plugins/developers/add/>.
 3. Once approved, commit `gecko-404-fixer/*` to SVN `trunk`, copy it with `svn cp trunk tags/1.0.0`, and put `wporg-assets/*` in the top-level `assets` folder.
-4. The SVN username is `"him anshu"`, with the space.

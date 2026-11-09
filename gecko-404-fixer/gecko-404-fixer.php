@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Gecko 404 Fixer by LinkGecko – Fix 404 Errors with Automatic 301 Redirects
+ * Plugin Name:       Gecko 404 Fixer
  * Plugin URI:        https://linkgecko.com/gecko-404-fixer/
  * Description:       Fix 404 errors automatically with smart 301 redirects to the right page, not your homepage.
  * Version:           1.0.0
